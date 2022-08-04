@@ -1,0 +1,28 @@
+---
+- block:
+    - name: Combine ip_address_list and vm_name_list list
+      set_fact:
+        dns_entry: "{{ ip_address_list | zip(vm_name_list) | map('join', ' ') | list }}"
+
+    - name: Add DNS records to Pihole (from new_build)
+      lineinfile:
+        backup: yes
+        path: /etc/pihole/custom.list
+        line: "{{ item }}.{{ dns_suffix_list[0] }}"
+        state: present
+      loop: "{{ dns_entry }}"
+      notify:
+        - Restart pihole-FTL
+  when: dns_entry_manual is undefined
+
+- name: Add DNS records to Pihole (manual)
+  lineinfile:
+    backup: yes
+    path: /etc/pihole/custom.list
+    line: "{{ dns_entry_manual }}"
+    state: present
+  notify:
+    - Restart pihole-FTL
+  when: dns_entry_manual is defined
+
+

@@ -1,0 +1,23 @@
+---
+- name: Remove DNS record (from new_build)
+  lineinfile:
+    backup: yes
+    path: /etc/pihole/custom.list
+    regexp: "{{ item }}.{{dns_suffix_list[0]}}"
+    state: absent
+  loop: "{{vm_name_list}}"
+  notify:
+    - Restart pihole-FTL
+  when: dnshostname is undefined
+
+- name: Remove DNS record (manual)
+  lineinfile:
+    backup: yes
+    path: /etc/pihole/custom.list
+    regexp: "{{ dnshostname }}"
+    state: absent
+  notify:
+    - Restart pihole-FTL
+  when: dnshostname is defined
+
+
