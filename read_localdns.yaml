@@ -1,7 +1,6 @@
 ---
 - name: Read custom.list from Piholes
-  hosts: piholes
-  remote_user: eingram
+  hosts: all
   become: false
   gather_facts: no
 
