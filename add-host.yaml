@@ -11,4 +11,5 @@
 
   tasks:
     - include_role:
-        name: pihole_add
+        name: pihole-add
+        
