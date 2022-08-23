@@ -3,7 +3,7 @@
   lineinfile:
     backup: yes
     path: /etc/pihole/custom.list
-    regexp: "{{ item }}.{{dns_suffix_list[0]}}"
+    regexp: "{{ item }}.{{dns_domain}}"
     state: absent
   loop: "{{vm_name_list}}"
   notify:
