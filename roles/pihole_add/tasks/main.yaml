@@ -8,7 +8,7 @@
       lineinfile:
         backup: yes
         path: /etc/pihole/custom.list
-        line: "{{ item }}.{{ dns_domain }}"
+        line: "{{ item }}.{{ dns_suffix_list[0] }}"
         state: present
       loop: "{{ dns_entry }}"
       notify:
