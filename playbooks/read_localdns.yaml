@@ -1,6 +1,6 @@
 ---
 - name: Read custom.list from Piholes
-  hosts: all
+  hosts: piholes
   become: false
   gather_facts: no
 
