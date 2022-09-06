@@ -1,0 +1,3 @@
+---
+- name: Run pihole up
+  command: pihole -up
