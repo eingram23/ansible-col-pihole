@@ -8,9 +8,11 @@
       lineinfile:
         backup: yes
         path: /etc/pihole/custom.list
-        line: "{{ item }}.{{ dns_suffix_list[0] }}"
+        line: "{{ dns_item }}.{{ dns_suffix_list[0] }}"
         state: present
       loop: "{{ dns_entry }}"
+      loop_control:
+        loop_var: dns_item
       notify:
         - Restart pihole-FTL
   when: dns_entry_manual is undefined
