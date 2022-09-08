@@ -4,7 +4,7 @@
       set_fact:
         dns_entry: "{{ ip_address_list | zip(vm_name_list) | map('join', ' ') | list }}"
 
-    - name: Add DNS records to Pihole (from new_build)
+    - name: Add DNS record(s) to Pihole (from project)
       lineinfile:
         backup: yes
         path: /etc/pihole/custom.list
@@ -17,7 +17,7 @@
         - Restart pihole-FTL
   when: dns_entry_manual is undefined
 
-- name: Add DNS records to Pihole (manual)
+- name: Add DNS record to Pihole 
   lineinfile:
     backup: yes
     path: /etc/pihole/custom.list

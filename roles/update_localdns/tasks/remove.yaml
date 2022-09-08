@@ -1,5 +1,5 @@
 ---
-- name: Remove DNS record (from new_build)
+- name: Remove DNS record(s) (from project)
   lineinfile:
     backup: yes
     path: /etc/pihole/custom.list
@@ -10,7 +10,7 @@
     - Restart pihole-FTL
   when: dnshostname is undefined
 
-- name: Remove DNS record (manual)
+- name: Remove DNS record
   lineinfile:
     backup: yes
     path: /etc/pihole/custom.list
@@ -19,5 +19,4 @@
   notify:
     - Restart pihole-FTL
   when: dnshostname is defined
-
 
