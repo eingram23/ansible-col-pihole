@@ -1,30 +1,29 @@
 ---
 - block:
     - name: Combine ip_address_list and vm_name_list list
-      set_fact:
+      ansible.builtin.set_fact:
         dns_entry: "{{ ip_address_list | zip(vm_name_list) | map('join', ' ') | list }}"
 
     - name: Add DNS record(s) to Pihole (from project)
-      lineinfile:
-        backup: yes
+      ansible.builtin.lineinfile:
+        backup: true
         path: /etc/pihole/custom.list
-        line: "{{ dns_item }}.{{ dns_suffix_list[0] }}"
+        line: "{{ dns_entry_item }}.{{ dns_suffix_list[0] }}"
         state: present
       loop: "{{ dns_entry }}"
       loop_control:
-        loop_var: dns_item
+        loop_var: dns_entry_item
       notify:
         - Restart pihole-FTL
-  when: dns_entry_manual is undefined
+  when: ip_address_list is defined
 
-- name: Add DNS record to Pihole 
-  lineinfile:
-    backup: yes
+- name: Add DNS record to Pihole
+  ansible.builtin.lineinfile:
+    backup: true
     path: /etc/pihole/custom.list
-    line: "{{ dns_entry_manual }}"
+    regexp: "{{ customhost }}"
+    line: "{{ customip }} {{ customhost }}"
     state: present
   notify:
     - Restart pihole-FTL
-  when: dns_entry_manual is defined
-
-
+  when: customhost is defined

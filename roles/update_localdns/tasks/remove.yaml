@@ -1,22 +1,23 @@
 ---
 - name: Remove DNS record(s) (from project)
-  lineinfile:
-    backup: yes
+  ansible.builtin.lineinfile:
+    backup: true
     path: /etc/pihole/custom.list
-    regexp: "{{ item }}.{{dns_suffix_list[0]}}"
+    regexp: "{{ vm_name_list_item }}.{{ dns_suffix_list[0] }}"
     state: absent
-  loop: "{{vm_name_list}}"
+  loop: "{{ vm_name_list }}"
+  loop_control:
+    loop_var: vm_name_list_item
   notify:
     - Restart pihole-FTL
-  when: dnshostname is undefined
+  when: dns_suffix_list is defined
 
 - name: Remove DNS record
-  lineinfile:
-    backup: yes
+  ansible.builtin.lineinfile:
+    backup: true
     path: /etc/pihole/custom.list
-    regexp: "{{ dnshostname }}"
+    regexp: "{{ customhost }}"
     state: absent
   notify:
     - Restart pihole-FTL
-  when: dnshostname is defined
-
+  when: customhost is defined
