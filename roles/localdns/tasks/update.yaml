@@ -5,6 +5,7 @@
     dest: /var/tmp/ssh-key-git.key
     mode: '0400'
   delegate_to: localhost
+  become: false
 
 - name: Pull down custom.list from git
   ansible.builtin.git:
@@ -13,15 +14,15 @@
     key_file: /var/tmp/ssh-key-git.key
     accept_hostkey: true
   delegate_to: localhost
+  become: false
 
 - block:
     - name: Combine ip_address_list and vm_name_list list
       ansible.builtin.set_fact:
         dns_entry: "{{ ip_address_list | zip(vm_name_list) | map('join', ' ') | list }}"
 
-    - name: Add DNS record(s) to Pihole (from project)
+    - name: Add DNS record(s) to custom.list (from project)
       ansible.builtin.lineinfile:
-        backup: true
         # path: /etc/pihole/custom.list
         path: /var/tmp/configs/pihole/custom.list
         line: "{{ dns_entry_item }}.{{ dns_suffix_list[0] }}"
@@ -32,9 +33,8 @@
       delegate_to: localhost
   when: ip_address_list is defined
 
-- name: Add DNS record to Pihole
+- name: Add DNS record to custom.list
   ansible.builtin.lineinfile:
-    backup: true
     path: /var/tmp/configs/pihole/custom.list
     regexp: "{{ customhost }}"
     line: "{{ customip }} {{ customhost }}"
@@ -42,12 +42,12 @@
   delegate_to: localhost
   when: customhost is defined
 
-- name: Copy custom.list to main pihole
+- name: Copy custom.list to pihole
   ansible.builtin.copy:
     src: /var/tmp/configs/pihole/custom.list
     dest: /opt/pihole/etc-pihole/custom.list
     mode: '0644'
-  notify: Restart pihole-FTL
+  notify: Restart pihole container
 
 - name: Commit and push changes to custom.list
   git_acp:
@@ -61,15 +61,18 @@
     ssh_params:
       key_file: /var/tmp/ssh-key-git.key
   delegate_to: localhost
+  become: false
 
 - name: Clean up tmp files
   ansible.builtin.file:
     path: /var/tmp/configs
     state: absent
   delegate_to: localhost
+  become: false
 
 - name: Clean up key
   ansible.builtin.file:
     path: /var/tmp/ssh-key-git.key
     state: absent
   delegate_to: localhost
+  become: false
