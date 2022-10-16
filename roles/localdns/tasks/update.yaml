@@ -31,6 +31,7 @@
       loop_control:
         loop_var: dns_entry_item
       delegate_to: localhost
+      become: false
   when: ip_address_list is defined
 
 - name: Add DNS record to custom.list
@@ -40,6 +41,7 @@
     line: "{{ customip }} {{ customhost }}"
     state: present
   delegate_to: localhost
+  become: false
   when: customhost is defined
 
 - name: Copy custom.list to pihole
