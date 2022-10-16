@@ -49,6 +49,19 @@
     mode: '0644'
   notify: Restart pihole-FTL
 
+- name: Commit and push changes to custom.list
+  git_acp:
+    path: /var/tmp/configs/pihole
+    branch: main
+    comment: Add host
+    add: [ custom.list ]
+    remote: origin
+    mode: ssh
+    url: "git@github.com:eingram23/configs.git"
+    ssh_params:
+      key_file: /var/tmp/ssh-key-git.key
+  delegate_to: localhost
+
 - name: Clean up tmp files
   ansible.builtin.file:
     path: /var/tmp/configs
