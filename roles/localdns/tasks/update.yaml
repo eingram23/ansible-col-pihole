@@ -50,7 +50,7 @@
   notify: Restart pihole container
 
 - name: Commit and push changes to custom.list
-  git_acp:
+  lvrfrc87.git_acp.git_acp:
     path: /var/tmp/configs/pihole
     branch: main
     comment: Add host
