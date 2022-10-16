@@ -23,7 +23,6 @@
 
     - name: Add DNS record(s) to custom.list (from project)
       ansible.builtin.lineinfile:
-        # path: /etc/pihole/custom.list
         path: /var/tmp/configs/pihole/custom.list
         line: "{{ dns_entry_item }}.{{ dns_suffix_list[0] }}"
         state: present
