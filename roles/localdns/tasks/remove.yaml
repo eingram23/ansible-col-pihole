@@ -1,21 +1,4 @@
 ---
-- name: Create github key
-  ansible.builtin.template:
-    src: ssh-key-git.key.j2
-    dest: /var/tmp/ssh-key-git.key
-    mode: '0400'
-  delegate_to: localhost
-  become: false
-
-- name: Pull down custom.list from git
-  ansible.builtin.git:
-    repo: 'git@github.com:eingram23/configs.git'
-    dest: /var/tmp/configs
-    key_file: /var/tmp/ssh-key-git.key
-    accept_hostkey: true
-  delegate_to: localhost
-  become: false
-
 - name: Remove DNS record(s) (from project)
   ansible.builtin.lineinfile:
     path: /var/tmp/configs/pihole/custom.list
@@ -24,8 +7,6 @@
   loop: "{{ vm_name_list }}"
   loop_control:
     loop_var: vm_name_list_item
-  delegate_to: localhost
-  become: false
   when: dns_suffix_list is defined
 
 - name: Remove DNS record
@@ -33,41 +14,4 @@
     path: /var/tmp/configs/pihole/custom.list
     regexp: "{{ customhost }}"
     state: absent
-  delegate_to: localhost
-  become: false
   when: customhost is defined
-
-- name: Copy custom.list to pihole
-  ansible.builtin.copy:
-    src: /var/tmp/configs/pihole/custom.list
-    dest: /opt/pihole/etc-pihole/custom.list
-    mode: '0644'
-  notify: Restart pihole container
-
-- name: Commit and push changes to custom.list
-  lvrfrc87.git_acp.git_acp:
-    path: /var/tmp/configs/pihole
-    branch: main
-    comment: Add host
-    add: [ custom.list ]
-    remote: origin
-    mode: ssh
-    url: "git@github.com:eingram23/configs.git"
-    ssh_params:
-      key_file: /var/tmp/ssh-key-git.key
-  delegate_to: localhost
-  become: false
-
-- name: Clean up tmp files
-  ansible.builtin.file:
-    path: /var/tmp/configs
-    state: absent
-  delegate_to: localhost
-  become: false
-
-- name: Clean up key
-  ansible.builtin.file:
-    path: /var/tmp/ssh-key-git.key
-    state: absent
-  delegate_to: localhost
-  become: false

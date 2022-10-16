@@ -1,0 +1,23 @@
+---
+- block:
+    - name: Combine ip_address_list and vm_name_list list
+      ansible.builtin.set_fact:
+        dns_entry: "{{ ip_address_list | zip(vm_name_list) | map('join', ' ') | list }}"
+
+    - name: Add DNS record(s) to custom.list (from project)
+      ansible.builtin.lineinfile:
+        path: /var/tmp/configs/pihole/custom.list
+        line: "{{ dns_entry_item }}.{{ dns_suffix_list[0] }}"
+        state: present
+      loop: "{{ dns_entry }}"
+      loop_control:
+        loop_var: dns_entry_item
+  when: ip_address_list is defined
+
+- name: Add DNS record to custom.list
+  ansible.builtin.lineinfile:
+    path: /var/tmp/configs/pihole/custom.list
+    regexp: "{{ customhost }}"
+    line: "{{ customip }} {{ customhost }}"
+    state: present
+  when: customhost is defined
