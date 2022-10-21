@@ -13,12 +13,3 @@
     ssh_params:
       key_file: /var/tmp/ssh-key-git.key
 
-- name: Clean up tmp files
-  ansible.builtin.file:
-    path: /var/tmp/configs
-    state: absent
-
-- name: Clean up key
-  ansible.builtin.file:
-    path: /var/tmp/ssh-key-git.key
-    state: absent
