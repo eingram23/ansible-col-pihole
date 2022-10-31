@@ -1,2 +1,2 @@
 ---
-privkey: "{{ lookup('hashi_vault', 'secret=secret/data/git/ssh:key') }}"
+privkey: "{{ lookup('hashi_vault', 'secret=secret/git/ssh:key') }}"
