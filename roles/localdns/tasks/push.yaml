@@ -3,7 +3,7 @@
   ansible.builtin.template:
     src: ssh-key-git.key.j2
     dest: /var/tmp/ssh-key-git.key
-    mode: '0666'
+    mode: '0400'
 
 - name: Commit and push changes to custom.list
   lvrfrc87.git_acp.git_acp:
