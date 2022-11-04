@@ -1,15 +1,24 @@
 ---
 - name: Commit and push changes to custom.list
-  lvrfrc87.git_acp.git_acp:
-    path: /var/tmp/configs/pihole
-    branch: main
-    comment: Add host
-    add: [ custom.list ]
-    remote: origin
-    mode: ssh
-    user_name: eingram23
-    user_email: edward.ingram23@gmail.com
-    url: "git@github.com:eingram23/configs.git"
-    ssh_params:
-      accept_hostkey: true
-      key_file: /var/tmp/ssh-key-git.key
+  # lvrfrc87.git_acp.git_acp:
+  #   path: /var/tmp/configs/pihole
+  #   branch: main
+  #   comment: Add host
+  #   add: [ custom.list ]
+  #   remote: origin
+  #   mode: ssh
+  #   user_name: eingram23
+  #   user_email: edward.ingram23@gmail.com
+  #   url: "git@github.com:eingram23/configs.git"
+  #   ssh_params:
+  #     key_file: /var/tmp/ssh-key-git.key
+  ansible.builtin.shell:
+    cmd: |
+      git config --global core.sshCommand 'ssh -i /var/tmp/ssh-key-git.key'
+      git config --global user.name "eingram23"
+      git config --global user.email "edward.ingram23@gmail.com"
+      cd /var/tmp/configs
+      git add .
+      git commit -m "add host"
+      git push
+
