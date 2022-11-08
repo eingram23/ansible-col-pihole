@@ -1,3 +1,9 @@
 - name: Restart pihole container
   ansible.builtin.shell:
     cmd: docker restart pihole
+  notify: Pause 20 seconds for pihole update
+
+- name: Pause 20 seconds for pihole update
+  ansible.builtin.pause:
+    seconds: 20
+
