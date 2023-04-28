@@ -1,5 +1,8 @@
 ---
 - name: Commit and push changes to custom.list
+  environment:
+    GIT_AUTHOR_NAME: eingram23
+    GIT_AUTHOR_EMAIL: edward.ingram23@gmail.com
   lvrfrc87.git_acp.git_acp:
     path: /var/tmp/configs/pihole
     branch: main
@@ -7,8 +10,6 @@
     add: [ custom.list ]
     remote: origin
     mode: ssh
-    user_name: eingram23
-    user_email: edward.ingram23@gmail.com
     url: "git@github.com:eingram23/configs.git"
     ssh_params:
       key_file: /var/tmp/ssh-key-git.key
