@@ -3,6 +3,8 @@
   environment:
     GIT_AUTHOR_NAME: eingram23
     GIT_AUTHOR_EMAIL: edward.ingram23@gmail.com
+    GIT_COMMITTER_NAME: eingram23
+    GIT_COMMITTER_EMAIL: edward.ingram23@gmail.com
   lvrfrc87.git_acp.git_acp:
     path: /var/tmp/configs/pihole
     branch: main
