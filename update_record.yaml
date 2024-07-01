@@ -7,11 +7,13 @@
 
   tasks:
 
-    - ansible.builtin.include_role:
+    - name: Pull down custom.list
+      ansible.builtin.include_role:
         name: eingram23.pihole.localdns
         tasks_from: pull
 
-    - ansible.builtin.include_role:
+    - name: Make DNS modifications
+      ansible.builtin.include_role:
         name: eingram23.pihole.localdns
         tasks_from: addchange
       when: customhost is defined
